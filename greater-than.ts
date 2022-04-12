@@ -1,19 +1,46 @@
+import { And, Equal, IsPositive, IsWhole, Not, DigitArray, Max, PadLeft, Head, Digit, Tail } from "type-plus";
 
-type Tuple<T, N extends number, R extends unknown[] = []> =
-  R['length'] extends N
-    ? R
-    : Tuple<T, N, [T, ...R]>;
+type gtTest1 = GreaterThanExtended<1, 2>
+type gtTest2 = GreaterThanExtended<2, 1>
+type gtTest3 = GreaterThanExtended<-1, 1>
+type gtTest4 = GreaterThanExtended<1, -1>
+type gtTest5 = GreaterThanExtended<-2, -1>
+type gtTest6 = GreaterThanExtended<-1, -2>
 
-export type GreaterThan<N1 extends number, N2 extends number> =
-  Tuple<unknown, N1> extends [...Tuple<unknown, N2>, ...any[]]
-    ? true
-    : false
+export type GreaterThanExtended<A extends number, B extends number, Fail = never> =
+  And<IsWhole<A>, IsWhole<B>> extends false ? Fail :
+  number extends A ? Fail :
+  number extends B ? Fail :
+  Equal<A, B> extends true ? false :
+  And<IsPositive<A>, Not<IsPositive<B>>> extends true ? true :
+  And<Not<IsPositive<A>>, IsPositive<B>> extends true ? false :
+  And<IsPositive<A>, IsPositive<B>> extends true ? OnPositiveWhole<A, B> :
+  OnPositiveWhole<B, A>
 
-const gtTest1: GreaterThan<199, 600> = false;
-const gtTest2: GreaterThan<600, 199> = true;
-// @ts-expect-error
-const gtTest3: GreaterThan<199, 600> = true;
 
-type Plus<N1 extends number, N2 extends number> = [...Tuple<unknown, N1>, ...Tuple<unknown, N2>]["length"]
-type x = Plus<234, 631>;
+type OnPositiveWhole<A extends number, B extends number> = (
+  FromNumberAbs<A> extends infer DA ? DA extends number[] ?
+  FromNumberAbs<B> extends infer DB ? DB extends number[] ?
+  Max<DA['length'], DB['length']> extends infer M ? M extends number ?
+  PadLeft<DA, M, 0> extends infer PDA ? PDA extends number[] ?
+  PadLeft<DB, M, 0> extends infer PDB ? PDB extends number[] ?
+  OnDigitArray<PDA, PDB>
+  : never : never
+  : never : never
+  : never : never
+  : never : never
+  : never : never
+)
 
+type OnDigitArray<DA extends number[], DB extends number[]> = (
+  Equal<Head<DA>, Head<DB>> extends true
+    ? OnDigitArray<Tail<DA>, Tail<DB>>
+    : Digit.GreaterThan<Head<DA>, Head<DB>>
+)
+
+type TrimMinusSign<N extends string> = N extends `-${infer rest}`
+  ? rest : N;
+
+type FromNumberAbs<N extends number> = DigitArray.FromString<TrimMinusSign<`${N}`>>
+
+type z = FromNumberAbs<-407>;

@@ -1,6 +1,7 @@
 {
   "name": "type-sort",
-  "dependencies": {
+  "devDependencies": {
+    "type-plus": "^4.8.1",
     "typescript": "^4.7.0-beta"
   }
 }

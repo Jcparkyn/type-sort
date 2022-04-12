@@ -6,7 +6,10 @@ This is a sorting algorithm implemented using only TypeScript types.
 
 ## FAQ
 **Q. Does this actually work?**
-A. Yes, but only for numbers between 0 and 999 (inclusive).
+A. Yes.
 
 **Q. Why would I ever want to use this?**
-A. ...
+A. Uhh... science?
+
+## Credits
+This implementation uses `GreaterThan` from [type-plus](https://github.com/unional/type-plus) to perform comparisons between numbers.
