@@ -24,11 +24,12 @@ type Sorted<TNums extends number[]> = TNums extends [number, number]
   ? Insert<head, Sorted<tail>>
   : never;
 
-type X7 = Sorted<[1, 2]>;
-type X8 = Sorted<[2, 1]>;
-type X9 = Sorted<[3, 2, 1]>;
-type X10 = Sorted<[1, 2, 3]>;
-type X11 = Sorted<[1, 3, 2]>;
-type X12 = Sorted<[1, 3, 2, 0]>;
-type X13 = Sorted<[1, 3, 2, 2, 300, 2, 2, 0, 0, 8, 7, 6, 5, 3, 4, 6, 2]>;
+type Test1 = Sorted<[1, 2]>;
+type Test2 = Sorted<[2, 1]>;
+type Test3 = Sorted<[3, 2, 1]>;
+type Test4 = Sorted<[1, 2, 3]>;
+type Test5 = Sorted<[1, 3, 2]>;
+type Test6 = Sorted<[1, 3, 2, 0]>;
+type Test7 = Sorted<[1, 3, 2, 2, 300, 2, 2, 0, 0, 8, 7, 999, 5, 3, 4, 6, 2]>;
+type Test8 = Sorted<[89, 88, 87, 76, 65, 54, 43, 32, 56, 23, 546, 234, 2, 3, 4, 5, 6, 3, 2, 1, 8, 7, 6, 16, 15, 14, 13, 13, 12, 0, 9]>;
 
