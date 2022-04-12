@@ -1,0 +1,6 @@
+{
+  "name": "type-sort",
+  "dependencies": {
+    "typescript": "^4.7.0-beta"
+  }
+}
