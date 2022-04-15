@@ -1,16 +1,42 @@
 import { GreaterThanExtended } from "greater-than";
 
-type Insert<TItem extends number, TArr extends number[]> =
+/**
+ * Inserts an item into a sorted array.
+ */
+type Insert<TItem extends number, TArr extends number[]> = (
+  TArr extends [
+    infer I1 extends number,
+    infer I2 extends number,
+    infer Pivot extends number,
+    ...infer Right extends number[]
+  ] ? InsertBisect<TItem, [I1, I2], Pivot, Right> :
   TArr extends [infer Head extends number, ...infer Tail extends number[]]
-    ? GreaterThanExtended<TItem, Head, false> extends true
-      ? [Head, ...Insert<TItem, Tail>]
-      : [TItem, ...TArr]
-    : [TItem];
+  ? GreaterThanExtended<TItem, Head, false> extends true
+  ? [Head, ...Insert<TItem, Tail>]
+  : [TItem, ...TArr]
+  : [TItem]
+)
 
+/**
+ * Inserts an item into either the left or right side of a sorted array,
+ * depending whether it is larger than the pivot (centre) value.
+ * 
+ * This is used as an optimisation to reduce the number of recursions
+ * needed, which approximately doubles the maximum tuple size.
+ */
+type InsertBisect<TItem extends number, Left extends number[], Pivot extends number, Right extends number[]> = (
+  GreaterThanExtended<TItem, Pivot> extends true
+  ? [...Left, Pivot, ...Insert<TItem, Right>]
+  : [...Insert<TItem, Left>, Pivot, ...Right]
+)
+
+/**
+ * Sorts the elements in a tuple of whole numbers.
+ */
 type Sorted<TNums extends number[]> =
   TNums extends [infer Head extends number, ...infer Tail extends number[]]
-    ? Insert<Head, Sorted<Tail>>
-    : [];
+  ? Insert<Head, Sorted<Tail>>
+  : [];
 
 type Test0 = Sorted<[]>;
 type Test1 = Sorted<[1]>;
